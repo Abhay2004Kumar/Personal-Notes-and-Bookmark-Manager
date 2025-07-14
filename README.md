@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📒 Notes & 🔖 Bookmarks Manager
 
-## Getting Started
+A secure, responsive, and modern web app for managing your personal notes and bookmarks. Built using **Next.js App Router**, **MongoDB**, **JWT Authentication**, and styled with **Tailwind CSS + shadcn/ui** for a sleek dark UI experience.
 
-First, run the development server:
+---
+
+## ✨ Features
+
+- 🔐 **Authentication**
+
+  - Sign up and log in using JWT-based auth
+  - Protected routes for authenticated users only
+
+- 📒 **Notes Management**
+
+  - Create, edit, delete notes
+  - Tag notes and filter/search by tag or content
+  - Mark notes as favorites
+
+- 🔖 **Bookmarks Management**
+
+  - Add/edit/delete bookmarks
+  - Auto-fetch title if left empty
+  - Tag and filter/search bookmarks
+  - Mark favorites
+
+- 🌙 **Dark Theme UI**
+
+  - Beautiful responsive design using TailwindCSS and shadcn/ui
+  - Mobile-friendly with scroll effects and navigation animations
+
+---
+
+## 🚀 Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/notes-bookmarks-manager.git
+cd notes-bookmarks-manager
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Set up environment variables
+
+Create a `.env.local` file in the root of the project and add the following:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_secure_jwt_secret
+```
+
+> 💡 You can get a MongoDB URI from [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+
+### 4. Run the development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` to see the app in action.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧱 Tech Stack
 
-## Learn More
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Authentication**: JWT with cookies/localStorage
+- **Database**: MongoDB with Mongoose
+- **Data Fetching**: REST APIs via App Router route handlers
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Project Structure (Simplified)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+/app
+  /api
+    /auth         # Login & Signup
+    /notes        # Note CRUD
+    /bookmarks    # Bookmark CRUD
+  /notes          # Notes page (protected)
+  /bookmarks      # Bookmarks page (protected)
+  /login, /signup # Auth pages
 
-## Deploy on Vercel
+/components       # UI Components (Cards, Dialogs, Navbar, etc.)
+/context          # AuthProvider for JWT context
+/lib              # Helpers (db, auth, fetch metadata)
+/models           # Mongoose models
+/types            # Shared TS types
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🙌 Credits
+
+- [Next.js](https://nextjs.org/)
+- [shadcn/ui](https://ui.shadcn.dev/)
+- [MongoDB](https://www.mongodb.com/)
+- [Lucide Icons](https://lucide.dev/)
+
+---
+
+## 📜 License
+
+MIT License. Feel free to use, modify, and share!
+
