@@ -9,7 +9,6 @@ import { showSuccess, showError } from '@/lib/toast';
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [, setError] = useState('');
   const router = useRouter();
 
 
@@ -43,7 +42,6 @@ export default function SignupPage() {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to create account. Please try again.';
       showError(errorMessage);
-      setError(errorMessage);
     }
   };
 

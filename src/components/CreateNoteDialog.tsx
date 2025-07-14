@@ -18,6 +18,18 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
 
+  interface NoteApiResponse {
+    success: boolean;
+    data?: {
+      _id: string;
+      title: string;
+      content: string;
+      tags: string[];
+      userId: string;
+    };
+    error?: string;
+  }
+
   const handleSubmit = async () => {
     if (!title.trim()) {
       showError('Title is required');
@@ -32,19 +44,15 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
   
     try {
       const tagArray = tags.split(',').map(t => t.trim()).filter(Boolean);
-      const res = await axios.post(
-        '/api/notes',
-        {
-          title,
-          content,
-          tags: tagArray
+      const res = await axios.post<NoteApiResponse>('/api/notes', {
+        title,
+        content,
+        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
+      });
   
       if (res.data.success) {
         showSuccess('Note created successfully');
@@ -65,7 +73,6 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
         errorMessage = err.message;
       }
       showError(errorMessage);
-      alert('Failed to create note. Check console for details.');
     }
   };
   

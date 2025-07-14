@@ -13,11 +13,13 @@ declare global {
   var mongoose: CachedConnection;
 }
 
-const cached: CachedConnection = global.mongoose || { conn: null, promise: null };
-
+// Initialize global mongoose if it doesn't exist
 if (!global.mongoose) {
-  global.mongoose = cached;
+  global.mongoose = { conn: null, promise: null };
 }
+
+// Use the global mongoose instance
+const { mongoose: cached } = global;
 
 export async function connectDB() {
   if (cached.conn) {

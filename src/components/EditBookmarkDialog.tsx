@@ -15,6 +15,19 @@ import { useState } from 'react';
 import axios from 'axios';
 import { showSuccess, showError } from '@/lib/toast';
 
+interface BookmarkApiResponse {
+  success: boolean;
+  data?: {
+    _id: string;
+    url: string;
+    title: string;
+    description?: string;
+    tags: string[];
+    userId: string;
+  };
+  error?: string;
+}
+
 interface Props {
   bookmark: Bookmark;
   onUpdated: () => void;
@@ -48,7 +61,7 @@ export default function EditBookmarkDialog({ bookmark, onUpdated }: Props) {
     }
 
     try {
-      const response = await axios.put(
+      const response = await axios.put<BookmarkApiResponse>(
         `/api/bookmarks/${bookmark._id}`,
         {
           url: url.trim(),

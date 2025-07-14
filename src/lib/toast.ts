@@ -1,6 +1,6 @@
 import { toast } from 'react-hot-toast';
 
-type ApiResponse<T = Record<string, unknown>> = {
+type ApiResponse<T = unknown> = {
   success: boolean;
   message: string;
   data?: T;

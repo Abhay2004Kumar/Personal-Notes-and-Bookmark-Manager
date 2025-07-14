@@ -14,6 +14,19 @@ import { useState } from 'react';
 import axios from 'axios';
 import { showError } from '@/lib/toast';
 
+interface BookmarkApiResponse {
+  success: boolean;
+  data?: {
+    _id: string;
+    url: string;
+    title: string;
+    description?: string;
+    tags: string[];
+    userId: string;
+  };
+  error?: string;
+}
+
 interface Props {
   onBookmarkCreated: () => void;
 }
@@ -46,13 +59,13 @@ export default function CreateBookmarkDialog({ onBookmarkCreated }: Props) {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axios.post<BookmarkApiResponse>(
         '/api/bookmarks',
         {
-          url,
+          url: url.trim(),
           title: title.trim(),
           description: desc.trim(),
-          tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+          tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
         },
         {
           headers: {
