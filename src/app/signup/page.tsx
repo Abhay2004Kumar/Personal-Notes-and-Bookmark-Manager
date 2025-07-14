@@ -40,7 +40,14 @@ export default function SignupPage() {
       showSuccess('Account created successfully! Redirecting...');
       router.push('/notes');
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create account. Please try again.';
+      let errorMessage: string;
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else {
+        errorMessage = 'Failed to create account. Please try again.';
+      }
       showError(errorMessage);
     }
   };

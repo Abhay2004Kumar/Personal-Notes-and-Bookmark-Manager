@@ -86,15 +86,20 @@ export default function EditBookmarkDialog({ bookmark, onUpdated }: Props) {
       } else {
         showError(response.data.error || 'Failed to update bookmark');
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Update bookmark error:', error);
-      const errorMessage = axios.isAxiosError(error)
-        ? error.response?.data?.error || 'Failed to update bookmark'
-        : 'An error occurred while updating the bookmark';
-      showError(errorMessage);
       
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        // The parent component will handle the redirect
+      if (axios.isAxiosError<{ error?: string }>(error)) {
+        const errorMessage = error.response?.data?.error || 'Failed to update bookmark';
+        showError(errorMessage);
+        
+        if (error.response?.status === 401) {
+          // The parent component will handle the redirect
+        }
+      } else if (error instanceof Error) {
+        showError(error.message);
+      } else {
+        showError('An error occurred while updating the bookmark');
       }
     }
   };

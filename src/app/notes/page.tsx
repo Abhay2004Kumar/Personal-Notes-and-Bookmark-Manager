@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
@@ -14,35 +14,38 @@ export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const router = useRouter();
 
-  const fetchNotes = async (query = '') => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
-    try {
-      const res = await axios.get('/api/notes?' + query, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      if (res.data.success) {
-        setNotes(res.data.data);
-      } else {
-        showError(res.data.error || 'Failed to fetch notes');
-      }
-    } catch (err) {
-      console.error('Fetch notes error:', err);
-      const errorMessage = axios.isAxiosError(err) 
-        ? err.response?.data?.error || 'Failed to fetch notes'
-        : 'An error occurred while fetching notes';
-      showError(errorMessage);
-      
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
+  const fetchNotes = useCallback(
+    async (query = '') => {
+      const token = localStorage.getItem('token');
+      if (!token) {
         router.push('/login');
+        return;
       }
-    }
-  };
+
+      try {
+        const res = await axios.get('/api/notes?' + query, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        if (res.data.success) {
+          setNotes(res.data.data);
+        } else {
+          showError(res.data.error || 'Failed to fetch notes');
+        }
+      } catch (err) {
+        console.error('Fetch notes error:', err);
+        const errorMessage = axios.isAxiosError(err) 
+          ? err.response?.data?.error || 'Failed to fetch notes'
+          : 'An error occurred while fetching notes';
+        showError(errorMessage);
+        
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          router.push('/login');
+        }
+      }
+    },
+    [router, showError, setNotes]
+  );
 
   const deleteNote = async (id: string) => {
     const token = localStorage.getItem('token');
@@ -126,7 +129,7 @@ export default function NotesPage() {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [fetchNotes]);
 
   return (
     <div className="max-w-3xl mx-auto p-4">

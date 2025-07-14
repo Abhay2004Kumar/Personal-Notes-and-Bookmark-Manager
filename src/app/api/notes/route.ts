@@ -25,7 +25,13 @@ export async function GET(req: Request) {
     const q = searchParams.get('q');
     const tags = searchParams.get('tags')?.split(',');
 
-    const query: any = { userId };
+    const query: {
+      userId: string;
+      $or?: Array<{
+        [key: string]: { $regex: string; $options: string };
+      }>;
+      tags?: { $in: string[] };
+    } = { userId };
 
     if (q) {
       query.$or = [

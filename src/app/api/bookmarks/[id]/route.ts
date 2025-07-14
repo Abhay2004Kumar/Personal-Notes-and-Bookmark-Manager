@@ -3,7 +3,11 @@ import { connectDB } from '@/lib/db';
 import { Bookmark } from '@/models/bookmark';
 import { verifyToken } from '@/lib/auth';
 
-export async function PUT(req: Request, context: { params: { id: string } }) {
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
   try {
     await connectDB();
 
@@ -21,7 +25,7 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
     const body = await req.json();
 
     // Check if the bookmark exists and belongs to the user
-    const existingBookmark = await Bookmark.findOne({ _id: context.params.id, userId });
+    const existingBookmark = await Bookmark.findOne({ _id: id, userId });
     if (!existingBookmark) {
       return NextResponse.json(
         { success: false, error: 'Bookmark not found' },
@@ -30,7 +34,7 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
     }
 
     const bookmark = await Bookmark.findOneAndUpdate(
-      { _id: context.params.id, userId },
+      { _id: id, userId },
       body,
       { new: true, runValidators: true }
     );
@@ -56,7 +60,11 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function DELETE(_: Request, context: { params: { id: string } }) {
+export async function DELETE(
+  _: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
   try {
     await connectDB();
 
@@ -74,7 +82,7 @@ export async function DELETE(_: Request, context: { params: { id: string } }) {
     const userId = payload.userId;
 
     // Check if the bookmark exists and belongs to the user
-    const existingBookmark = await Bookmark.findOne({ _id: context.params.id, userId });
+    const existingBookmark = await Bookmark.findOne({ _id: id, userId });
     if (!existingBookmark) {
       return NextResponse.json(
         { success: false, error: 'Bookmark not found' },
@@ -82,9 +90,8 @@ export async function DELETE(_: Request, context: { params: { id: string } }) {
       );
     }
 
-    const result = await Bookmark.deleteOne({ _id: context.params.id, userId });
-    
-    if (result.deletedCount === 0) {
+    const deletedBookmark = await Bookmark.findOneAndDelete({ _id: id, userId });
+    if (!deletedBookmark) {
       return NextResponse.json(
         { success: false, error: 'Failed to delete bookmark' },
         { status: 500 }

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Bookmark, BookOpen, Check, FileText, Search, Sparkles } from 'lucide-react';
+import { Bookmark, BookOpen, Search, Sparkles } from 'lucide-react';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -61,7 +61,7 @@ export default function LandingPage() {
               onClick={() => router.push('/signup')}
               className="rounded-full px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              Get Started - It's Free
+              Get Started - It&apos;s Free
             </Button>
             <Button
               variant="outline"

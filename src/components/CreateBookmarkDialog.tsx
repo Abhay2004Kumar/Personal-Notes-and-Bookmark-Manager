@@ -86,10 +86,7 @@ export default function CreateBookmarkDialog({ onBookmarkCreated }: Props) {
       }
     } catch (error) {
       console.error('Create bookmark error:', error);
-      const errorMessage = axios.isAxiosError(error)
-        ? error.response?.data?.error || 'Failed to create bookmark'
-        : 'An error occurred while creating the bookmark';
-      showError(errorMessage);
+      showError('An error occurred while creating the bookmark');
     }
   };
 

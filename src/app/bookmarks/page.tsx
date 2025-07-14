@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
@@ -16,31 +16,34 @@ export default function BookmarksPage() {
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-  const fetchBookmarks = async (query = '') => {
-    if (!token) return;
-    
-    try {
-      const res = await axios.get('/api/bookmarks?' + query, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  const fetchBookmarks = useCallback(
+    async (query = '') => {
+      if (!token) return;
       
-      if (res.data.success) {
-        setBookmarks(res.data.data || []);
-      } else {
-        showError(res.data.error || 'Failed to fetch bookmarks');
+      try {
+        const res = await axios.get('/api/bookmarks?' + query, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        if (res.data.success) {
+          setBookmarks(res.data.data || []);
+        } else {
+          showError(res.data.error || 'Failed to fetch bookmarks');
+        }
+      } catch (error) {
+        console.error('Fetch bookmarks error:', error);
+        const errorMessage = axios.isAxiosError(error)
+          ? error.response?.data?.error || 'Failed to fetch bookmarks'
+          : 'An error occurred while fetching bookmarks';
+        showError(errorMessage);
+        
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          router.push('/login');
+        }
       }
-    } catch (error) {
-      console.error('Fetch bookmarks error:', error);
-      const errorMessage = axios.isAxiosError(error)
-        ? error.response?.data?.error || 'Failed to fetch bookmarks'
-        : 'An error occurred while fetching bookmarks';
-      showError(errorMessage);
-      
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        router.push('/login');
-      }
-    }
-  };
+    },
+    [token, router, showError]
+  );
 
   const deleteBookmark = async (id: string) => {
     if (!token) {
@@ -117,7 +120,7 @@ export default function BookmarksPage() {
   useEffect(() => {
     if (!token) router.push('/login');
     else fetchBookmarks();
-  }, []);
+  }, [token, router, fetchBookmarks]);
 
   return (
     <div className="max-w-3xl mx-auto p-4">

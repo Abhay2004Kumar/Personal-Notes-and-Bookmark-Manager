@@ -13,17 +13,22 @@ export const handleApiResponse = async <T>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response = await promise;
-    const data = await response.json();
+    const data: T = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Something went wrong');
+      const errorData = data as { error?: string };
+      throw new Error(errorData.error || 'Something went wrong');
     }
 
     if (successMessage) {
       toast.success(successMessage);
     }
 
-    return { success: true, ...data };
+    return { 
+      success: true, 
+      message: successMessage || 'Operation completed successfully',
+      ...data 
+    };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
     toast.error(errorMessage);

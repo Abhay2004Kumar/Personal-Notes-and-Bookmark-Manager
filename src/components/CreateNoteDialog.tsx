@@ -47,7 +47,7 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
       const res = await axios.post<NoteApiResponse>('/api/notes', {
         title,
         content,
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        tags: tagArray,
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -55,7 +55,6 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
       });
   
       if (res.data.success) {
-        showSuccess('Note created successfully');
         setTitle('');
         setContent('');
         setTags('');
@@ -67,11 +66,13 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
     } catch (err: unknown) {
       console.error('Failed to create note:', err);
       let errorMessage = 'An error occurred while creating the note';
-      if (axios.isAxiosError(err)) {
+      
+      if (axios.isAxiosError<{ error?: string }>(err)) {
         errorMessage = err.response?.data?.error || 'Failed to create note';
       } else if (err instanceof Error) {
         errorMessage = err.message;
       }
+      
       showError(errorMessage);
     }
   };

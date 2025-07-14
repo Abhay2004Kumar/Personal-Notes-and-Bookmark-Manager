@@ -9,7 +9,6 @@ import { showSuccess, showError } from '@/lib/toast';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const router = useRouter();
 
 
@@ -35,10 +34,9 @@ export default function LoginPage() {
       localStorage.setItem('token', data.token);
       showSuccess('Logged in successfully!');
       router.push('/notes');
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to log in. Please try again.';
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to log in. Please try again.';
       showError(errorMessage);
-      setError(errorMessage);
     }
   };
 

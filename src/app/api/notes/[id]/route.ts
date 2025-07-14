@@ -1,12 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { connectDB } from '@/lib/db';
 import { Note } from '@/models/note';
 import { verifyToken } from '@/lib/auth';
 
-export async function PUT(req: Request, context: { params: { id: string } }) {
-  const { params } = context;
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await connectDB();
 
+  // Wait for params to resolve
+  const { id } = await params;
+  
   const authHeader = req.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
   const payload = verifyToken(token || '');
@@ -17,7 +22,7 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
 
   try {
     const note = await Note.findOneAndUpdate(
-      { _id: params.id, userId },
+      { _id: id, userId },
       body,
       { new: true }
     );
@@ -43,10 +48,15 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function GET(req: Request, context: { params: { id: string } }) {
-  const { params } = context;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await connectDB();
 
+  // Wait for params to resolve
+  const { id } = await params;
+  
   const authHeader = req.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
   const payload = verifyToken(token || '');
@@ -55,7 +65,7 @@ export async function GET(req: Request, context: { params: { id: string } }) {
   const userId = payload.userId;
 
   try {
-    const note = await Note.findOne({ _id: params.id, userId });
+    const note = await Note.findOne({ _id: id, userId });
     if (!note) {
       return NextResponse.json(
         { success: false, error: 'Note not found' },
@@ -72,10 +82,15 @@ export async function GET(req: Request, context: { params: { id: string } }) {
   }
 }
 
-export async function DELETE(req: Request, context: { params: { id: string } }) {
-  const { params } = context;
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   await connectDB();
 
+  // Wait for params to resolve
+  const { id } = await params;
+  
   const authHeader = req.headers.get('authorization');
   const token = authHeader?.split(' ')[1];
   const payload = verifyToken(token || '');
@@ -84,7 +99,7 @@ export async function DELETE(req: Request, context: { params: { id: string } }) 
   const userId = payload.userId;
 
   try {
-    const deleted = await Note.findOneAndDelete({ _id: params.id, userId });
+    const deleted = await Note.findOneAndDelete({ _id: id, userId });
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: 'Note not found' },
