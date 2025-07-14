@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import axios from 'axios';
-import { showSuccess, showError } from '@/lib/toast';
+import { showError } from '@/lib/toast';
 
 interface Props {
   onNoteCreated: () => void;

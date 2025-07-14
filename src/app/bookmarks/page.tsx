@@ -42,7 +42,7 @@ export default function BookmarksPage() {
         }
       }
     },
-    [token, router, showError]
+    [token, router]
   );
 
   const deleteBookmark = async (id: string) => {

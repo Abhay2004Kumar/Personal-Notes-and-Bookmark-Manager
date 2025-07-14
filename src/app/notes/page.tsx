@@ -44,7 +44,7 @@ export default function NotesPage() {
         }
       }
     },
-    [router, showError, setNotes]
+    [router, setNotes]
   );
 
   const deleteNote = async (id: string) => {
