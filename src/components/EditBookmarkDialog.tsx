@@ -36,7 +36,7 @@ export default function EditBookmarkDialog({ bookmark, onUpdated }: Props) {
     // Basic URL validation
     try {
       new URL(url);
-    } catch (e) {
+    } catch {
       showError('Please enter a valid URL (e.g., https://example.com)');
       return;
     }

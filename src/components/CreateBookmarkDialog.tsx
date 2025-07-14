@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import axios from 'axios';
-import { showSuccess, showError } from '@/lib/toast';
+import { showError } from '@/lib/toast';
 
 interface Props {
   onBookmarkCreated: () => void;
@@ -34,7 +34,7 @@ export default function CreateBookmarkDialog({ onBookmarkCreated }: Props) {
     // Basic URL validation
     try {
       new URL(url);
-    } catch (e) {
+    } catch {
       showError('Please enter a valid URL (e.g., https://example.com)');
       return;
     }

@@ -9,7 +9,7 @@ import { showSuccess, showError } from '@/lib/toast';
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
   const router = useRouter();
 
 
@@ -40,8 +40,8 @@ export default function SignupPage() {
       localStorage.setItem('token', data.token);
       showSuccess('Account created successfully! Redirecting...');
       router.push('/notes');
-    } catch (err: any) {
-      const errorMessage = err.message || 'Failed to create account. Please try again.';
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create account. Please try again.';
       showError(errorMessage);
       setError(errorMessage);
     }

@@ -56,11 +56,14 @@ export default function CreateNoteDialog({ onNoteCreated }: Props) {
       } else {
         showError(res.data.error || 'Failed to create note');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to create note:', err);
-      const errorMessage = axios.isAxiosError(err) 
-        ? err.response?.data?.error || 'Failed to create note'
-        : 'An error occurred while creating the note';
+      let errorMessage = 'An error occurred while creating the note';
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.error || 'Failed to create note';
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       showError(errorMessage);
       alert('Failed to create note. Check console for details.');
     }
