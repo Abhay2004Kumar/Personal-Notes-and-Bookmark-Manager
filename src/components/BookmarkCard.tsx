@@ -20,41 +20,51 @@ export default function BookmarkCard({
   onToggleFavorite,
 }: Props) {
   return (
-    <Card className="w-full shadow-sm hover:shadow-md transition-shadow duration-200">
-      <CardContent className="p-3 sm:p-4 space-y-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
-          <div>
+    <Card className="w-full shadow-sm">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+          {/* Content Block */}
+          <div className="flex-1 min-w-0">
             <a
               href={bookmark.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 font-semibold hover:underline text-base sm:text-lg truncate max-w-full"
+              className="text-blue-600 font-semibold hover:underline break-words text-lg"
             >
               {bookmark.title || bookmark.url}
             </a>
+
             {bookmark.tags?.length > 0 && (
-              <div className="text-sm text-muted-foreground space-x-1 sm:space-x-2 mt-1 flex-wrap">
+              <div className="flex flex-wrap gap-1 text-sm text-muted-foreground mt-1">
                 {bookmark.tags.map((tag) => (
                   <span key={tag}>#{tag}</span>
                 ))}
               </div>
             )}
+
             {bookmark.description && (
-              <p className="text-sm text-muted-foreground line-clamp-2">{bookmark.description}</p>
+              <p className="text-sm text-muted-foreground mt-1 break-words">
+                {bookmark.description}
+              </p>
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-2 sm:space-y-0">
+          {/* Actions Block */}
+          <div className="flex sm:flex-col flex-row flex-wrap items-center justify-end gap-2">
             <Button
               size="icon"
               variant="ghost"
               title={bookmark.favorite ? 'Unmark Favorite' : 'Mark Favorite'}
               onClick={onToggleFavorite}
             >
-              {bookmark.favorite ? <Star className="text-yellow-500" /> : <StarOff />}
+              {bookmark.favorite ? (
+                <Star className="text-yellow-500" />
+              ) : (
+                <StarOff />
+              )}
             </Button>
             <EditBookmarkDialog bookmark={bookmark} onUpdated={onEdit} />
-            <Button size="sm" variant="destructive" onClick={onDelete} className="w-full sm:w-auto">
+            <Button size="sm" variant="destructive" onClick={onDelete}>
               Delete
             </Button>
           </div>
