@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.gitignore
+.env*.local
+*.md
+*.mdx
+*.log
+.tmp
+.temp
+.vscode
+.idea
+.DS_Store
+*.pem
